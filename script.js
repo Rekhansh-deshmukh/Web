@@ -1,124 +1,125 @@
-// Custom Cursor
-const cursor = document.createElement('div');
-const cursorFollower = document.createElement('div');
-cursor.className = 'cursor';
-cursorFollower.className = 'cursor-follower';
-document.body.appendChild(cursor);
-document.body.appendChild(cursorFollower);
+document.addEventListener('DOMContentLoaded', function() {
+    // Newsletter subscription form handling
+    const subscribeBtn = document.querySelector('.subscribe-btn');
+    const emailInput = document.querySelector('.email-input');
 
-let mouseX = 0;
-let mouseY = 0;
-let cursorX = 0;
-let cursorY = 0;
-let followerX = 0;
-let followerY = 0;
+    subscribeBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        const email = emailInput.value.trim();
 
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-});
+        if (!validateEmail(email)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
 
-function animateCursor() {
-    cursorX += (mouseX - cursorX) * 0.1;
-    cursorY += (mouseY - cursorY) * 0.1;
-    followerX += (mouseX - followerX) * 0.05;
-    followerY += (mouseY - followerY) * 0.05;
-
-    cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
-    cursorFollower.style.transform = `translate(${followerX}px, ${followerY}px)`;
-
-    requestAnimationFrame(animateCursor);
-}
-
-animateCursor();
-
-// Interactive Elements
-const interactiveElements = document.querySelectorAll('a, button, .navigator-item, .content-toggle');
-interactiveElements.forEach(element => {
-    element.addEventListener('mouseenter', () => {
-        cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) scale(1.5)`;
-        cursorFollower.style.width = '60px';
-        cursorFollower.style.height = '60px';
-        cursorFollower.style.borderColor = 'var(--primary-color)';
+        // Simulate subscription process (e.g., send to server)
+        // For now, just show a success message and clear input
+        alert('Thank you for subscribing! You will receive updates soon.');
+        emailInput.value = '';
     });
 
-    element.addEventListener('mouseleave', () => {
-        cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) scale(1)`;
-        cursorFollower.style.width = '40px';
-        cursorFollower.style.height = '40px';
-        cursorFollower.style.borderColor = 'var(--secondary-color)';
+    function validateEmail(email) {
+        // Simple email regex validation
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    // Custom cursor elements
+    const cursor = document.querySelector('.cursor');
+    const cursorFollower = document.querySelector('.cursor-follower');
+    
+    // Interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, .navigator-item, .skill-card, .knowledge-card');
+    
+    // Track mouse movement
+    document.addEventListener('mousemove', function(e) {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        
+        // Add slight delay to follower for smooth effect
+        setTimeout(() => {
+            cursorFollower.style.left = e.clientX + 'px';
+            cursorFollower.style.top = e.clientY + 'px';
+        }, 50);
     });
-});
 
-// Navigation
-const navLinks = document.querySelectorAll('.nav-link');
-const sections = document.querySelectorAll('.section');
+    // Handle interactive elements
+    interactiveElements.forEach(element => {
+        element.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(1.5)';
+            cursorFollower.style.transform = 'scale(1.5)';
+            cursorFollower.style.borderColor = 'var(--accent-color)';
+        });
 
-navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetId = link.getAttribute('href').substring(1);
-        
-        navLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-        
-        sections.forEach(section => {
-            section.classList.remove('active');
-            if (section.id === targetId) {
-                section.classList.add('active');
-            }
+        element.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'scale(1)';
+            cursorFollower.style.transform = 'scale(1)';
+            cursorFollower.style.borderColor = 'var(--secondary-color)';
+        });
+    });
+
+    // Navigation functionality
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.section');
+    const contentToggles = document.querySelectorAll('.content-toggle');
+    const toggleContents = document.querySelectorAll('.toggle-content');
+    const careerNavigatorItems = document.querySelectorAll('.navigator-item');
+
+    // Handle navigation links
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = this.getAttribute('href');
+            
+            // Update active states
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show target section
+            sections.forEach(section => {
+                if (section.id === target.substring(1)) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+        });
+    });
+
+    // Handle career navigator items
+    careerNavigatorItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const target = this.getAttribute('data-target');
+            
+            // Update active states
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === `#${target}`) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            
+            // Show target section
+            sections.forEach(section => {
+                if (section.id === target) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+        });
+    });
+
+    // Handle content toggles
+    contentToggles.forEach((toggle, index) => {
+        toggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            toggleContents[index].classList.toggle('active');
+            
+            // Update toggle text
+            const span = this.querySelector('span');
+            span.textContent = this.classList.contains('active') ? 'Hide Topics' : 'Show Topics';
         });
     });
 });
-
-// Content Toggle
-const contentToggles = document.querySelectorAll('.content-toggle');
-contentToggles.forEach(toggle => {
-    toggle.addEventListener('click', () => {
-        const content = toggle.nextElementSibling;
-        toggle.classList.toggle('active');
-        content.classList.toggle('active');
-    });
-});
-
-// Progress Bars
-const progressBars = document.querySelectorAll('.progress-fill');
-progressBars.forEach(bar => {
-    const percentage = bar.getAttribute('data-percentage');
-    bar.style.width = `${percentage}%`;
-});
-
-// Floating Icons Animation
-const floatingIcons = document.querySelectorAll('.floating-icon');
-floatingIcons.forEach((icon, index) => {
-    icon.style.animationDelay = `${index * 2}s`;
-});
-
-// Newsletter Form
-const newsletterForm = document.querySelector('.newsletter-form');
-if (newsletterForm) {
-    newsletterForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const emailInput = newsletterForm.querySelector('.email-input');
-        const email = emailInput.value;
-        
-        if (email) {
-            // Here you would typically send the email to your backend
-            alert('Thank you for subscribing! We\'ll keep you updated.');
-            emailInput.value = '';
-        }
-    });
-}
-
-// Initialize active section
-document.addEventListener('DOMContentLoaded', () => {
-    const defaultSection = document.querySelector('.section');
-    if (defaultSection) {
-        defaultSection.classList.add('active');
-    }
-    
-    const defaultNavLink = document.querySelector('.nav-link');
-    if (defaultNavLink) {
-        defaultNavLink.classList.add('active');
-    }
-}); 
