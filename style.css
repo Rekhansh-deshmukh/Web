@@ -602,7 +602,8 @@ main {
         grid-template-columns: 1fr;
     }
 }
-/* Add these new styles */
+
+/* Upcoming Features */
 .upcoming-features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -660,25 +661,22 @@ main {
     box-shadow: 0 4px 12px rgba(29, 205, 159, 0.3);
 }
 
-.feature-card {
+/* Footer */
+.site-footer {
     background: var(--card-background);
-    padding: 2rem;
-    border-radius: 15px;
+    padding: 2rem 0;
     text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.4);
-    border-color: var(--primary-color);
+.site-footer p {
+    color: var(--accent-color);
+    font-size: 1.1rem;
+    margin: 0;
 }
 
-.feature-icon {
-    font-size: 2.5rem;
+.site-footer .highlight {
     color: var(--primary-color);
-    margin-bottom: 1rem;
+    font-weight: 600;
     text-shadow: 0 0 10px rgba(29, 205, 159, 0.3);
-}
+} 
